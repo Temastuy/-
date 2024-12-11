@@ -1,5 +1,6 @@
+import datetime
+
 from selenium import webdriver
-from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 
 file = open('log.txt', 'w')
@@ -57,6 +58,10 @@ def test_login_redirect():
 def test_context_after_login_is_correct():
     correct_text = 'Products'
     current_text = driver.find_element(By.XPATH, '//*[@id="header_container"]/div[2]/span')
+    print(datetime.datetime.now())
+    driver.save_screenshot(f'sc_real_login\\screenshot_test_context_after_login_is_correct_ '
+                           f'{datetime.datetime.now().strftime('%H.%M.%S.%Y.%m.%d')}.png')
+
     assert correct_text == current_text.text, 'test_context_after_login_is_correct is Failed'
     file.write('test_context_after_login_is_correct is OK\n')
 def test_fake_login_label():
@@ -64,25 +69,12 @@ def test_fake_login_label():
     current_text = driver.find_element( By.XPATH, '//*[@id="login_button_container"]/div/form/div[3]/h3')
     assert correct_text == current_text.text, 'test_fake_login_label is Failed'
     file.write('test_fake_login_label is OK\n')
-
-def login_with_enter():
-    user_name = driver.find_element(By.XPATH, '//INPUT[@id="user-name"]')
-    user_pass = driver.find_element(By.XPATH, '//INPUT[@id="password"]')
-    login = 'standard_user'
-    user_name.send_keys(login)
-    file.write('Success write login\n')
-    password = 'secret_sauce'
-    user_pass.send_keys(password)
-    file.write('Success write password\n')
-
-    user_pass.send_keys(Keys.ENTER)
-    file.write('Success Enter login\n')
 # End of tests
 
 # main block
-def sc_real_login_with_enter():
+def sc_real_login():
     set_up()
-    login_with_enter()
+    login()
 
     test_login_redirect()
     test_context_after_login_is_correct()
@@ -94,5 +86,5 @@ def sc_fake_login():
 
 # -------------
 
-sc_real_login_with_enter()
+sc_real_login()
 file.close()
